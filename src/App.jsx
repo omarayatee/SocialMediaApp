@@ -16,7 +16,7 @@ import { ToastContainer } from "react-toastify";
 import Offline from './Components/Offline/Offline';
 import { useNetworkState } from "react-use";
 import Setting from "./Components/Setting/Setting";
-import AuthProtectedRoutes from "./Components/AuthProtectedRoutes/AuthProtectedRoutes";
+// import AuthProtectedRoutes from "./Components/AuthProtectedRoutes/AuthProtectedRoutes";
  
 
 const router = createBrowserRouter ([
@@ -26,8 +26,10 @@ const router = createBrowserRouter ([
     {path : "postdetails/:id" , element : (<ProtectedRoute> <PostDetails />  </ProtectedRoute>) },
     {path : "setting" , element : (<ProtectedRoute> <Setting />  </ProtectedRoute>) },
     {path : "profile" , element : (<ProtectedRoute>   <Profile />   </ProtectedRoute>)},
-    {path : "register" , element :  <AuthProtectedRoutes>  <Register />  </AuthProtectedRoutes>  },
-    {path : "login" , element :  <AuthProtectedRoutes>  <Login />  </AuthProtectedRoutes>},
+    {path : "register" , element :    <Register />   },
+    {path : "login" , element :    <Login /> },
+    // {path : "register" , element :  <AuthProtectedRoutes>  <Register />  </AuthProtectedRoutes>  },
+    // {path : "login" , element :  <AuthProtectedRoutes>  <Login />  </AuthProtectedRoutes>},
     {path : "*" , element : <Notfound />},
   ] }
 ])

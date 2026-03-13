@@ -4,22 +4,29 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Loader from "../Components/Loader/Loader";
 
+
 export const AuthContext = createContext();
 
 export default function AuthContextProvider({ children }) {
+  const [userToken, setuserToken] = useState(() => localStorage.getItem("userToken"));
+  const [userId, setuserId] = useState(null);
+  
 
-  const [userToken, setUserToken] = useState(() => localStorage.getItem("userToken"));
-  const [userId, setUserId] = useState(null);
-
-  // decode token
+  const [userLogin, setuserLogin] = useState(null);
   useEffect(() => {
-    if (userToken) {
-      const decoded = jwtDecode(userToken);
-      setUserId(decoded.user);
+    if (localStorage.getItem("userToken")) {
+      setuserLogin(localStorage.getItem("userToken"));
     }
-  }, [userToken]);
+  }, []);
 
-  // get user profile
+  useEffect(() => {
+    if (localStorage.getItem("userToken")) {
+      const { user } = jwtDecode(localStorage.getItem("userToken"));
+      setuserId(user);
+    }
+  }, [userLogin]);
+
+
   const {
     data: userData,
     isLoading,
@@ -31,10 +38,8 @@ export default function AuthContextProvider({ children }) {
       const res = await axios.get(
         "https://route-posts.routemisr.com/users/profile-data",
         {
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-          },
-        }
+          headers: { Authorization: `Bearer ${userLogin}` },
+        },
       );
       return res.data.data.user;
     },
@@ -42,17 +47,10 @@ export default function AuthContextProvider({ children }) {
   });
 
   if (isLoading) return <Loader />;
-  if (isError) return <h2>{error.message}</h2>;
+  if (isError) return <h2>Error</h2>;
 
   return (
-    <AuthContext.Provider
-      value={{
-        userToken,
-        setUserToken,
-        userId,
-        userData
-      }}
-    >
+    <AuthContext.Provider value={{ userLogin, setuserLogin, userId, userData }}>
       {children}
     </AuthContext.Provider>
   );
